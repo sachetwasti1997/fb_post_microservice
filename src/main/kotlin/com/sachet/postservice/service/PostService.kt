@@ -7,7 +7,7 @@ import reactor.core.publisher.Mono
 interface PostService {
     fun addPost(posts: Mono<Posts>):Mono<Posts>
     fun getAllPost(): Flux<Posts>
-    fun getPostByUserId(userId:String):Flux<Posts>
+    fun getPostByUserId(userId:String, page:Long, size:Long):Flux<Posts>
     fun updatePost(postId:String, posts: Mono<Posts>): Mono<Posts>
     fun deletePosts(postId: String):Mono<Void>
 }

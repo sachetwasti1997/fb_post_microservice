@@ -59,7 +59,13 @@ internal class PostControllerTest
                 title = "Good Morning",
                 userId = id,
                 description = ""
-            )
+            ),
+            Posts(
+                postId = UUID.randomUUID().toString(),
+                title = "Random Post",
+                userId = id,
+                description = "Random post for pagination!"
+            ),
         )
         postRepository.saveAll(postList).blockLast();
     }
@@ -106,17 +112,44 @@ internal class PostControllerTest
 
     @Test
     fun getPostByUserId(){
+        val page = 0
+        val size = 3
         webTestClient
             .get()
-            .uri("$POST_BASE_URI/$id")
+            .uri{
+                it
+                    .path("$POST_BASE_URI/$id")
+                    .queryParam("page", page)
+                    .queryParam("size", size)
+                    .build()
+            }
             .exchange()
             .expectStatus()
             .isOk
             .expectBodyList(Posts::class.java)
             .consumeWith<WebTestClient.ListBodySpec<Posts>> {
-                val body = it.responseBody
-                assertEquals(3, body?.size)
+                println(it.responseBody)
+                assertTrue(it.responseBody?.size == 3)
             }
+    }
+
+    @Test
+    fun getPostByUserIdPageNumberMoreThenDataPresent(){
+        val page = 2
+        val size = 3
+        webTestClient
+            .get()
+            .uri{
+                it
+                    .path("$POST_BASE_URI/$id")
+                    .queryParam("page", page)
+                    .queryParam("size", size)
+                    .build()
+            }
+            .exchange()
+            .expectStatus()
+            .isNotFound
+
     }
 
     @Test

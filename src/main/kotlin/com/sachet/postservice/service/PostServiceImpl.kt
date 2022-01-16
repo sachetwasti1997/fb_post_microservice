@@ -33,8 +33,11 @@ class PostServiceImpl
         return postRepository.findAll()
     }
 
-    override fun getPostByUserId(userId: String): Flux<Posts> {
-        return postRepository.getPostsByUserId(userId)
+    override fun getPostByUserId(userId: String, page:Long, size:Long): Flux<Posts> {
+        return postRepository
+            .getPostsByUserId(userId)
+            .skip(page * size)
+            .take(size)
     }
 
     override fun updatePost(postId: String, posts: Mono<Posts>): Mono<Posts> {

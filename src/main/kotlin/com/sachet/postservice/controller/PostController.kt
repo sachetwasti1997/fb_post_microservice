@@ -24,26 +24,30 @@ class PostController(
             .log()
     }
 
+    @GetMapping("/{userId}")
+    fun getPostByUserId(
+        @PathVariable userId:String,
+        @RequestParam(value = "page", defaultValue = "0")page: Long,
+        @RequestParam(value = "size", defaultValue = "3")size: Long
+    ):Mono<ResponseEntity<List<Posts>>>{
+        return postService
+            .getPostByUserId(userId, page, size)
+            .collectList()
+            .map {
+                if (it.isEmpty()){
+                    return@map ResponseEntity(HttpStatus.NOT_FOUND)
+                }
+                ResponseEntity(it, HttpStatus.OK)
+            }
+            .log()
+    }
+
     @GetMapping("")
     fun getAllPosts():Mono<ResponseEntity<List<Posts>>>{
         return postService
             .getAllPost()
             .collectList()
             .map {
-                ResponseEntity(it, HttpStatus.OK)
-            }
-            .log()
-    }
-
-    @GetMapping("/{userId}")
-    fun getPostByUserId(@PathVariable userId:String):Mono<ResponseEntity<List<Posts>>>{
-        return postService
-            .getPostByUserId(userId)
-            .collectList()
-            .map {
-                if (it.isEmpty()){
-                    return@map ResponseEntity(HttpStatus.NOT_FOUND)
-                }
                 ResponseEntity(it, HttpStatus.OK)
             }
             .log()
