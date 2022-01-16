@@ -7,9 +7,9 @@ import javax.validation.constraints.NotNull
 @Document(value = "posts")
 class Posts(
     @Id
-    val postId: String?= null,
+    var postId: String?= null,
     @field: NotNull(message = "User Id cannot be null!")
-    val userId: String ?= null,
+    var userId: String ?= null,
     @field: NotNull(message = "Post title cannot be null!")
     var title: String ?= null,
     var description: String ?= null,
