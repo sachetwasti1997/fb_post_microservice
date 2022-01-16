@@ -13,4 +13,8 @@ class Posts(
     @field: NotNull(message = "Post title cannot be null!")
     var title: String ?= null,
     var description: String ?= null,
-);
+){
+    override fun toString(): String {
+        return "Posts(postId=$postId, userId=$userId, title=$title, description=$description)"
+    }
+}
